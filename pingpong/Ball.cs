@@ -43,36 +43,37 @@ namespace pingpong
         public void AddPowerShot(Player player)
         {
             this.SpeedX = -this.SpeedX;
-            Bounced = true;
-            bouncedTimer();
+            BouncedTimer();
+
             this.SpeedX += this.SpeedX > 0 ? GameRules.PowerShot : -GameRules.PowerShot;
             if (Math.Abs(this.SpeedX) > GameRules.BallMaxSpeed)
-              this.SpeedX = this.SpeedX > 0 ? -GameRules.BallMaxSpeed : GameRules.BallMaxSpeed;
+              this.SpeedX = this.SpeedX > 0 ? GameRules.BallMaxSpeed : -GameRules.BallMaxSpeed;
 
             if (player.MoveUp)
-                this.SpeedY += new Random().Next(3, 5);
+                this.SpeedY = new Random().Next(-5, -2);
 
             if (player.MoveDown)
-                this.SpeedY -= new Random().Next(3, 5);
+                this.SpeedY = new Random().Next(2, 5);
             
         }
 
         public bool ScoredGoal()
         {
-            if (this.Body.X > GameRules.GameWidth - GameRules.BallRadius || this.Body.X - GameRules.BallRadius < 1)
+            if (this.Body.X > GameRules.GameWidth || this.Body.X < -10)
                 return true;
             return false;
         }
 
-        private void bouncedTimer()
+        public void BouncedTimer()
         {
-            var aTimer = new System.Timers.Timer(200);
-            aTimer.Elapsed += resetBouncedTimer;
+            Bounced = true;
+            var aTimer = new System.Timers.Timer(1000);
+            aTimer.Elapsed += ResetBouncedTimer;
             aTimer.AutoReset = false;
             aTimer.Enabled = true;
         }
 
-        private void resetBouncedTimer(Object source, ElapsedEventArgs e)
+        private void ResetBouncedTimer(Object source, ElapsedEventArgs e)
         {
             this.Bounced = false;
         }

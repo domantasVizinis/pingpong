@@ -32,7 +32,7 @@ namespace pingpong
         {
             this.components = new System.ComponentModel.Container();
             this.canvas = new System.Windows.Forms.PictureBox();
-            this.mainTimer = new System.Windows.Forms.Timer(this.components);
+            this.MainTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,11 +45,11 @@ namespace pingpong
             this.canvas.TabIndex = 0;
             this.canvas.TabStop = false;
             // 
-            // mainTimer
+            // MainTimer
             // 
-            this.mainTimer.Enabled = true;
-            this.mainTimer.Interval = 17;
-            this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
+            this.MainTimer.Enabled = true;
+            this.MainTimer.Interval = 17;
+            this.MainTimer.Tick += new System.EventHandler(this.MainTimer_Tick);
             // 
             // Form1
             // 
@@ -71,7 +71,7 @@ namespace pingpong
         #endregion
 
         private System.Windows.Forms.PictureBox canvas;
-        private System.Windows.Forms.Timer mainTimer;
+        private System.Windows.Forms.Timer MainTimer;
     }
 }
 

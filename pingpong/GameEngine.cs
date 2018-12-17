@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace pingpong
 {
     public class GameEngine
     {
-        public Player Player1;
+
+        private static GameEngine _instance;
+
+        public SuperPlayer Player1;
         public Player Player2;
         public Ball GameBall;
 
-        public GameEngine()
+        private GameEngine()
         {
-            Player1 = new Player(14, 258);
+            Player1 = new SuperPlayer(14, 258);
             Player2 = new Player(745, 258);
             GameBall = new Ball(290, 115);
+        }
+
+        public static GameEngine Instance()
+        {
+            if (_instance == null)
+            {
+                _instance = new GameEngine();
+            }
+
+            return _instance;
         }
 
         public void StartGame()
@@ -68,21 +82,22 @@ namespace pingpong
 
         private void UpdatePlayersMovement()
         {
-            int bottom = GameRules.GameHeight - GameRules.PlayerHeight;
+            int bottom1 = GameRules.GameHeight - Player1.Body.Height;
+            int bottom2 = GameRules.GameHeight - Player2.Body.Height;
             if (Player1.MoveUp)
             { int z = Player1.Body.Y <= 0 ? Player1.Body.Y = 0 : Player1.Body.Y -= GameRules.PlayerSpeed; }
             if (Player1.MoveDown)
-            { int z = Player1.Body.Y >= bottom ? Player1.Body.Y = bottom : Player1.Body.Y += GameRules.PlayerSpeed; }
+            { int z = Player1.Body.Y >= bottom1 ? Player1.Body.Y = bottom1 : Player1.Body.Y += GameRules.PlayerSpeed; }
             if (Player2.MoveUp)
             { int z = Player2.Body.Y <= 0 ? Player2.Body.Y = 0 : Player2.Body.Y -= GameRules.PlayerSpeed; }
             if (Player2.MoveDown)
-            { int z = Player2.Body.Y >= bottom ? Player2.Body.Y = bottom : Player2.Body.Y += GameRules.PlayerSpeed; }
+            { int z = Player2.Body.Y >= bottom2 ? Player2.Body.Y = bottom2 : Player2.Body.Y += GameRules.PlayerSpeed; }
         }
 
 
         private void UpdateAI()
         {
-            int z = Player2.Body.Bottom - GameRules.PlayerHeight / 2;
+            int z = Player2.Body.Bottom - Player2.Body.Height / 2;
             if (GameBall.Body.Y > 0 && GameBall.Body.X > GameRules.GameWidth / 2)
             {
                 if (GameBall.Body.Y > Player2.Body.Y + 30 && GameBall.Body.Y < Player2.Body.Bottom - 30)
@@ -107,12 +122,16 @@ namespace pingpong
                 Player2.MoveDown = false;
             }
         }
+        // normalus inheritance
+        // polimorfizmas
+        // patterns: creational (factory, singelton), behavior(strategy)
+
 
         private void CheckIfIntersects(Player player)
         {
-            if (GameBall.Body.IntersectsWith(player.Body) && !GameBall.Bounced)
-            {
-                int distance = player.Body.Bottom - GameBall.Body.Y;
+            if (GameBall.Body.IntersectsWith(player.Body) && !GameBall.Bounced) // 
+            {   
+                int distance = player.Body.Y - GameBall.Body.Y;
 
                 if (player.PowerShot(distance))
                 {
@@ -121,6 +140,7 @@ namespace pingpong
                 else
                 {
                     GameBall.SpeedX = -GameBall.SpeedX;
+                    GameBall.BouncedTimer();
                 }
             }
         }
@@ -128,6 +148,9 @@ namespace pingpong
         {
             if (GameBall.IntersectsWithBorder())
                 GameBall.SpeedY = -GameBall.SpeedY;
+
+            CheckIfIntersects(Player1);
+            CheckIfIntersects(Player2);
 
             if (GameBall.ScoredGoal())
             {
@@ -137,11 +160,10 @@ namespace pingpong
                 {
                     Player1.Score++;
                 }
-
+                //Thread.Sleep(9000);
                 GameBall.SpawnBall();
             }
-            CheckIfIntersects(Player1);
-            CheckIfIntersects(Player2);
+
 
             GameBall.Body.X += GameBall.SpeedX;
             GameBall.Body.Y += GameBall.SpeedY;

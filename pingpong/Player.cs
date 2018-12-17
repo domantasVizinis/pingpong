@@ -17,9 +17,9 @@ namespace pingpong
         public bool MoveDown { get; set; }
         public Rectangle Body;
 
-        public bool PowerShot(int distance)
+        public virtual bool PowerShot(int distance)
         {
-            if ((distance < (int) GameRules.PlayerHeight * 0.33 || distance > (int) GameRules.PlayerHeight * 0.66) &&
+            if ((distance < (int)this.Body.Height * 0.33 || distance > (int)this.Body.Height * 0.66) &&
                 (this.MoveUp || this.MoveDown))
                 return true;
             return false;

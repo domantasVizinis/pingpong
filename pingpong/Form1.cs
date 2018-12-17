@@ -6,8 +6,7 @@ namespace pingpong
 {
     public partial class Form1 : Form
     {
-
-        GameEngine _gameEngine = new GameEngine();
+        GameEngine _gameEngine = GameEngine.Instance();
 
         Graphics Canvas;
         SolidBrush sb = new SolidBrush(Color.White);
@@ -26,7 +25,7 @@ namespace pingpong
             Canvas.Clear(Color.Black);
             Canvas.FillRectangle(sb, _gameEngine.Player1.Body);
             Canvas.FillRectangle(sb, _gameEngine.Player2.Body);
-            Canvas.FillRectangle(sb, _gameEngine.GameBall.Body);
+            Canvas.FillRectangle(new SolidBrush(Color.Red), _gameEngine.GameBall.Body);
 
             Canvas.DrawString(_gameEngine.Player1.Score.ToString(), DrawFont, sb, (int)(this.ClientRectangle.Width*0.2), 10);
             Canvas.DrawString(_gameEngine.Player2.Score.ToString(), DrawFont, sb, (int)(this.ClientRectangle.Width*0.8), 10);
@@ -41,7 +40,7 @@ namespace pingpong
             _gameEngine.KeyUp(e);
         }
 
-        private void mainTimer_Tick(object sender, EventArgs e)
+        private void MainTimer_Tick(object sender, EventArgs e)
         {
             DrawIt();
             _gameEngine.GameCycle();                        
